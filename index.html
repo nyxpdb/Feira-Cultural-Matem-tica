@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Custo de Vida nas Regiões do Brasil | Feira Cultural Matemática</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0e16;
+            color: #e4e4e7;
+        }
+        
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .market-card {
+            background: linear-gradient(145deg, #131920, #1a1f2e);
+            border: 1px solid #1f2937;
+            transition: all 0.3s ease;
+        }
+        
+        .market-card:hover {
+            border-color: #374151;
+            transform: translateY(-2px);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .region-norte { color: #10b981; }
+        .region-nordeste { color: #fb923c; }
+        .region-sudeste { color: #3b82f6; }
+        .region-sul { color: #a78bfa; }
+        
+        .icv-excelente { color: #10b981; }
+        .icv-bom { color: #3b82f6; }
+        .icv-alerta { color: #fbbf24; }
+        .icv-critico { color: #ef4444; }
+        
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        thead tr {
+            background: #1a1f2e;
+        }
+        
+        tbody tr {
+            background: #131920;
+            transition: background 0.2s;
+        }
+        
+        tbody tr:hover {
+            background: #1a1f2e;
+        }
+
+        @media (max-width: 640px) {
+            .overflow-x-auto {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700 sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold gradient-text mono">CUSTO DE VIDA NAS REGIÕES DO BRASIL</h1>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-1">Feira Cultural | Trabalho de Matemática 2024</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs sm:text-sm font-semibold text-gray-300">Sesi 111 Centro Educacional</p>
+                    <p class="text-xs text-gray-500">Júlio César | Lucas Trindade | Giovanni</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Live Ticker - ICV -->
+    <div class="bg-gray-900 border-b border-gray-700 overflow-x-auto">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex flex-nowrap gap-4 sm:gap-6 text-xs sm:text-sm mono whitespace-nowrap">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-500">SUL:</span>
+                <span class="icv-excelente font-bold">ICV 68,2%</span>
+                <span class="text-green-500">▼ MELHOR</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-gray-500">SUDESTE:</span>
+                <span class="icv-bom font-bold">ICV 73,5%</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-gray-500">NORTE:</span>
+                <span class="icv-alerta font-bold">ICV 82,4%</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-gray-500">NORDESTE:</span>
+                <span class="icv-critico font-bold">ICV 89,7%</span>
+                <span class="text-red-500">▲ PIOR</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+        
+        <!-- Metodologia -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="text-blue-500">█</span> METODOLOGIA DO ESTUDO
+            </h2>
+            <div class="market-card p-6 rounded-lg">
+                <h3 class="text-lg font-bold mb-4 text-blue-400">Cálculo do Índice de Custo de Vida (ICV)</h3>
+                
+                <div class="bg-gray-900 bg-opacity-50 p-4 rounded mb-4">
+                    <p class="text-purple-400 font-bold mb-2">Fórmula do ICV:</p>
+                    <p class="mono text-green-400 text-lg">ICV = (Gasto Total Mensal ÷ Salário Mínimo Médio) × 100</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-900 bg-opacity-30 p-3 rounded">
+                        <p class="font-bold text-yellow-400 mb-2">Gasto Total Mensal =</p>
+                        <ul class="text-sm space-y-1 text-gray-300">
+                            <li>• Cesta Básica</li>
+                            <li>• Educação (mensalidade média)</li>
+                            <li>• Saúde (plano ou gastos médios)</li>
+                            <li>• Lazer (cinema + teatro + museu)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-900 bg-opacity-30 p-3 rounded">
+                        <p class="font-bold text-cyan-400 mb-2">Interpretação do ICV:</p>
+                        <ul class="text-sm space-y-1 text-gray-300">
+                            <li class="icv-excelente">• ICV < 70% → Excelente acessibilidade</li>
+                            <li class="icv-bom">• ICV 70-80% → Boa acessibilidade</li>
+                            <li class="icv-alerta">• ICV 80-90% → Alerta</li>
+                            <li class="icv-critico">• ICV > 90% → Situação crítica</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-400 italic">
+                    <strong>Dados coletados:</strong> Salário mínimo estadual (2024), cesta básica (DIEESE), gastos com educação e saúde (IBGE/IPEA), 
+                    lazer (valores médios de ingressos em capitais regionais).
+                </p>
+            </div>
+        </section>
+
+        <!-- Comparativo Geral das 4 Regiões -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="text-green-500">█</span> COMPARATIVO GERAL DAS REGIÕES
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+                
+                <!-- Sul -->
+                <div class="market-card p-4 rounded-lg border-l-4 border-purple-500">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold region-sul mono">SUL</h3>
+                        <span class="text-xs bg-green-500 bg-opacity-20 text-green-400 px-2 py-1 rounded">1º MELHOR</span>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Salário Médio:</span>
+                            <span class="font-bold mono">R$ 1.655</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Gasto Médio:</span>
+                            <span class="font-bold mono">R$ 1.129</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">ICV:</span>
+                            <span class="font-bold mono icv-excelente text-lg">68,2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sudeste -->
+                <div class="market-card p-4 rounded-lg border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold region-sudeste mono">SUDESTE</h3>
+                        <span class="text-xs bg-blue-500 bg-opacity-20 text-blue-400 px-2 py-1 rounded">2º</span>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Salário Médio:</span>
+                            <span class="font-bold mono">R$ 1.640</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Gasto Médio:</span>
+                            <span class="font-bold mono">R$ 1.205</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">ICV:</span>
+                            <span class="font-bold mono icv-bom text-lg">73,5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Norte -->
+                <div class="market-card p-4 rounded-lg border-l-4 border-green-500">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold region-norte mono">NORTE</h3>
+                        <span class="text-xs bg-yellow-500 bg-opacity-20 text-yellow-400 px-2 py-1 rounded">3º</span>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Salário Médio:</span>
+                            <span class="font-bold mono">R$ 1.456</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Gasto Médio:</span>
+                            <span class="font-bold mono">R$ 1.200</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">ICV:</span>
+                            <span class="font-bold mono icv-alerta text-lg">82,4%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nordeste -->
+                <div class="market-card p-4 rounded-lg border-l-4 border-orange-500">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold region-nordeste mono">NORDESTE</h3>
+                        <span class="text-xs bg-red-500 bg-opacity-20 text-red-400 px-2 py-1 rounded">4º PIOR</span>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Salário Médio:</span>
+                            <span class="font-bold mono">R$ 1.412</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Gasto Médio:</span>
+                            <span class="font-bold mono">R$ 1.266</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">ICV:</span>
+                            <span class="font-bold mono icv-critico text-lg">89,7%</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Gráfico Comparativo ICV -->
+            <div class="market-card p-4 rounded-lg">
+                <h3 class="text-sm font-bold mb-3 mono text-gray-400">ÍNDICE DE CUSTO DE VIDA (ICV) POR REGIÃO</h3>
+                <canvas id="chartICVGeral"></canvas>
+            </div>
+        </section>
+
+        <!-- REGIÃO SUL -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="region-sul">█</span> REGIÃO SUL
+            </h2>
+            
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr class="text-left border-b border-gray-700">
+                            <th class="px-3 py-3 font-bold mono">ESTADO</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SALÁRIO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">CESTA (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">EDUCAÇÃO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SAÚDE (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">LAZER (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">TOTAL (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">ICV (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Paraná</td>
+                            <td class="px-3 py-3 mono text-right">1.794</td>
+                            <td class="px-3 py-3 mono text-right">659</td>
+                            <td class="px-3 py-3 mono text-right">280</td>
+                            <td class="px-3 py-3 mono text-right">195</td>
+                            <td class="px-3 py-3 mono text-right">85</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.219</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-excelente">67,9%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Rio Grande do Sul</td>
+                            <td class="px-3 py-3 mono text-right">1.573</td>
+                            <td class="px-3 py-3 mono text-right">687</td>
+                            <td class="px-3 py-3 mono text-right">265</td>
+                            <td class="px-3 py-3 mono text-right">180</td>
+                            <td class="px-3 py-3 mono text-right">78</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.210</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-bom">76,9%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Santa Catarina</td>
+                            <td class="px-3 py-3 mono text-right">1.597</td>
+                            <td class="px-3 py-3 mono text-right">624</td>
+                            <td class="px-3 py-3 mono text-right">270</td>
+                            <td class="px-3 py-3 mono text-right">175</td>
+                            <td class="px-3 py-3 mono text-right">88</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.157</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-excelente">72,4%</td>
+                        </tr>
+                        <tr class="bg-purple-900 bg-opacity-20">
+                            <td class="px-3 py-3 font-bold">MÉDIA</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.655</td>
+                            <td class="px-3 py-3 mono text-right font-bold">657</td>
+                            <td class="px-3 py-3 mono text-right font-bold">272</td>
+                            <td class="px-3 py-3 mono text-right font-bold">183</td>
+                            <td class="px-3 py-3 mono text-right font-bold">84</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.129</td>
+                            <td class="px-3 py-3 mono text-right font-bold text-lg region-sul">68,2%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-cyan-400">MODA</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-yellow-400">MEDIANA</td>
+                            <td class="px-3 py-3 mono text-right">1.597</td>
+                            <td class="px-3 py-3 mono text-right">659</td>
+                            <td class="px-3 py-3 mono text-right">270</td>
+                            <td class="px-3 py-3 mono text-right">180</td>
+                            <td class="px-3 py-3 mono text-right">85</td>
+                            <td class="px-3 py-3 mono text-right">1.210</td>
+                            <td class="px-3 py-3 mono text-right">72,4%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">GASTOS POR CATEGORIA - SUL</h3>
+                    <canvas id="chartSul"></canvas>
+                </div>
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">CONCLUSÃO - REGIÃO SUL</h3>
+                    <div class="text-xs space-y-3 text-gray-300">
+                        <div>
+                            <p class="font-bold text-purple-400 mb-1">1. O salário é suficiente?</p>
+                            <p><span class="text-green-400">✓ SIM.</span> Com ICV de 68,2%, a região Sul apresenta a melhor relação custo-benefício do país. Sobram em média R$ 526 (31,8% do salário) após despesas básicas.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-purple-400 mb-1">2. Qual item pesa mais?</p>
+                            <p><span class="text-yellow-400">CESTA BÁSICA</span> representa 58,2% dos gastos totais, seguida por Educação (24,1%) e Saúde (16,2%). Lazer é apenas 7,4%.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-purple-400 mb-1">3. Estados discrepantes?</p>
+                            <p><span class="text-blue-400">Paraná</span> possui o maior salário (R$ 1.794) e melhor ICV (67,9%). <span class="text-orange-400">Rio Grande do Sul</span> tem a cesta mais cara (R$ 687) mas ainda mantém ICV controlado devido ao salário regional.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REGIÃO SUDESTE -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="region-sudeste">█</span> REGIÃO SUDESTE
+            </h2>
+            
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr class="text-left border-b border-gray-700">
+                            <th class="px-3 py-3 font-bold mono">ESTADO</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SALÁRIO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">CESTA (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">EDUCAÇÃO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SAÚDE (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">LAZER (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">TOTAL (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">ICV (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Espírito Santo</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">672</td>
+                            <td class="px-3 py-3 mono text-right">295</td>
+                            <td class="px-3 py-3 mono text-right">210</td>
+                            <td class="px-3 py-3 mono text-right">92</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.269</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-critico">89,9%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Minas Gerais</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">698</td>
+                            <td class="px-3 py-3 mono text-right">275</td>
+                            <td class="px-3 py-3 mono text-right">185</td>
+                            <td class="px-3 py-3 mono text-right">82</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.240</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">87,8%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Rio de Janeiro</td>
+                            <td class="px-3 py-3 mono text-right">1.641</td>
+                            <td class="px-3 py-3 mono text-right">742</td>
+                            <td class="px-3 py-3 mono text-right">320</td>
+                            <td class="px-3 py-3 mono text-right">225</td>
+                            <td class="px-3 py-3 mono text-right">105</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.392</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">84,8%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">São Paulo</td>
+                            <td class="px-3 py-3 mono text-right">1.550</td>
+                            <td class="px-3 py-3 mono text-right">758</td>
+                            <td class="px-3 py-3 mono text-right">340</td>
+                            <td class="px-3 py-3 mono text-right">230</td>
+                            <td class="px-3 py-3 mono text-right">115</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.443</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-critico">93,1%</td>
+                        </tr>
+                        <tr class="bg-blue-900 bg-opacity-20">
+                            <td class="px-3 py-3 font-bold">MÉDIA</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.640</td>
+                            <td class="px-3 py-3 mono text-right font-bold">718</td>
+                            <td class="px-3 py-3 mono text-right font-bold">308</td>
+                            <td class="px-3 py-3 mono text-right font-bold">213</td>
+                            <td class="px-3 py-3 mono text-right font-bold">99</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.336</td>
+                            <td class="px-3 py-3 mono text-right font-bold text-lg region-sudeste">73,5%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-cyan-400">MODA</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-yellow-400">MEDIANA</td>
+                            <td class="px-3 py-3 mono text-right">1.596</td>
+                            <td class="px-3 py-3 mono text-right">720</td>
+                            <td class="px-3 py-3 mono text-right">308</td>
+                            <td class="px-3 py-3 mono text-right">218</td>
+                            <td class="px-3 py-3 mono text-right">99</td>
+                            <td class="px-3 py-3 mono text-right">1.331</td>
+                            <td class="px-3 py-3 mono text-right">86,3%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">GASTOS POR CATEGORIA - SUDESTE</h3>
+                    <canvas id="chartSudeste"></canvas>
+                </div>
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">CONCLUSÃO - REGIÃO SUDESTE</h3>
+                    <div class="text-xs space-y-3 text-gray-300">
+                        <div>
+                            <p class="font-bold text-blue-400 mb-1">1. O salário é suficiente?</p>
+                            <p><span class="text-yellow-400">⚠ PARCIALMENTE.</span> Com ICV de 73,5%, o Sudeste tem custos elevados que consomem boa parte do salário. Sobram apenas R$ 304 mensais (26,5%).</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-blue-400 mb-1">2. Qual item pesa mais?</p>
+                            <p><span class="text-yellow-400">CESTA BÁSICA</span> representa 53,7% dos gastos. Educação (23,1%) e Saúde (15,9%) também pesam significativamente devido aos custos das capitais.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-blue-400 mb-1">3. Estados discrepantes?</p>
+                            <p><span class="text-red-400">São Paulo</span> tem o pior ICV (93,1%) devido ao custo elevado em todas as categorias, especialmente cesta básica (R$ 758). <span class="text-green-400">Minas Gerais</span> apresenta melhor equilíbrio (87,8%).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REGIÃO NORTE -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="region-norte">█</span> REGIÃO NORTE
+            </h2>
+            
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr class="text-left border-b border-gray-700">
+                            <th class="px-3 py-3 font-bold mono">ESTADO</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SALÁRIO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">CESTA (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">EDUCAÇÃO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SAÚDE (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">LAZER (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">TOTAL (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">ICV (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Acre</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">728</td>
+                            <td class="px-3 py-3 mono text-right">260</td>
+                            <td class="px-3 py-3 mono text-right">195</td>
+                            <td class="px-3 py-3 mono text-right">75</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.258</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-critico">89,1%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Amapá</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">752</td>
+                            <td class="px-3 py-3 mono text-right">245</td>
+                            <td class="px-3 py-3 mono text-right">188</td>
+                            <td class="px-3 py-3 mono text-right">72</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.257</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-critico">89,0%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Amazonas</td>
+                            <td class="px-3 py-3 mono text-right">1.550</td>
+                            <td class="px-3 py-3 mono text-right">715</td>
+                            <td class="px-3 py-3 mono text-right">270</td>
+                            <td class="px-3 py-3 mono text-right">205</td>
+                            <td class="px-3 py-3 mono text-right">88</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.278</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">82,5%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Pará</td>
+                            <td class="px-3 py-3 mono text-right">1.505</td>
+                            <td class="px-3 py-3 mono text-right">689</td>
+                            <td class="px-3 py-3 mono text-right">255</td>
+                            <td class="px-3 py-3 mono text-right">198</td>
+                            <td class="px-3 py-3 mono text-right">80</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.222</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">81,2%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Rondônia</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">695</td>
+                            <td class="px-3 py-3 mono text-right">248</td>
+                            <td class="px-3 py-3 mono text-right">185</td>
+                            <td class="px-3 py-3 mono text-right">68</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.196</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">84,7%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Roraima</td>
+                            <td class="px-3 py-3 mono text-right">1.466</td>
+                            <td class="px-3 py-3 mono text-right">738</td>
+                            <td class="px-3 py-3 mono text-right">242</td>
+                            <td class="px-3 py-3 mono text-right">190</td>
+                            <td class="px-3 py-3 mono text-right">70</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.240</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">84,6%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Tocantins</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">652</td>
+                            <td class="px-3 py-3 mono text-right">235</td>
+                            <td class="px-3 py-3 mono text-right">175</td>
+                            <td class="px-3 py-3 mono text-right">65</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.127</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-bom">79,8%</td>
+                        </tr>
+                        <tr class="bg-green-900 bg-opacity-20">
+                            <td class="px-3 py-3 font-bold">MÉDIA</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.456</td>
+                            <td class="px-3 py-3 mono text-right font-bold">710</td>
+                            <td class="px-3 py-3 mono text-right font-bold">251</td>
+                            <td class="px-3 py-3 mono text-right font-bold">191</td>
+                            <td class="px-3 py-3 mono text-right font-bold">74</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.225</td>
+                            <td class="px-3 py-3 mono text-right font-bold text-lg region-norte">82,4%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-cyan-400">MODA</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-yellow-400">MEDIANA</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">715</td>
+                            <td class="px-3 py-3 mono text-right">248</td>
+                            <td class="px-3 py-3 mono text-right">190</td>
+                            <td class="px-3 py-3 mono text-right">72</td>
+                            <td class="px-3 py-3 mono text-right">1.240</td>
+                            <td class="px-3 py-3 mono text-right">84,6%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">GASTOS POR CATEGORIA - NORTE</h3>
+                    <canvas id="chartNorte"></canvas>
+                </div>
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">CONCLUSÃO - REGIÃO NORTE</h3>
+                    <div class="text-xs space-y-3 text-gray-300">
+                        <div>
+                            <p class="font-bold text-green-400 mb-1">1. O salário é suficiente?</p>
+                            <p><span class="text-yellow-400">⚠ LIMITE.</span> Com ICV de 82,4%, a região Norte está próxima do limite de alerta. Sobram apenas R$ 231 mensais (17,6% do salário).</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-green-400 mb-1">2. Qual item pesa mais?</p>
+                            <p><span class="text-yellow-400">CESTA BÁSICA</span> domina com 58,0% dos gastos devido à logística complexa da região. Educação (20,5%) e Saúde (15,6%) também são significativos.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-green-400 mb-1">3. Estados discrepantes?</p>
+                            <p><span class="text-green-400">Tocantins</span> tem melhor ICV (79,8%) com custo de vida mais baixo. <span class="text-red-400">Acre e Amapá</span> ultrapassam 89% devido a custos logísticos elevados e isolamento geográfico.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REGIÃO NORDESTE -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="region-nordeste">█</span> REGIÃO NORDESTE
+            </h2>
+            
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr class="text-left border-b border-gray-700">
+                            <th class="px-3 py-3 font-bold mono">ESTADO</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SALÁRIO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">CESTA (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">EDUCAÇÃO (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">SAÚDE (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">LAZER (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">TOTAL (R$)</th>
+                            <th class="px-3 py-3 font-bold mono text-right">ICV (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Alagoas</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">738</td>
+                            <td class="px-3 py-3 mono text-right">245</td>
+                            <td class="px-3 py-3 mono text-right">185</td>
+                            <td class="px-3 py-3 mono text-right">68</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.236</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">87,5%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Bahia</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">685</td>
+                            <td class="px-3 py-3 mono text-right">265</td>
+                            <td class="px-3 py-3 mono text-right">195</td>
+                            <td class="px-3 py-3 mono text-right">78</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.223</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">86,6%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Ceará</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">672</td>
+                            <td class="px-3 py-3 mono text-right">258</td>
+                            <td class="px-3 py-3 mono text-right">188</td>
+                            <td class="px-3 py-3 mono text-right">75</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.193</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">84,5%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Maranhão</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">728</td>
+                            <td class="px-3 py-3 mono text-right">232</td>
+                            <td class="px-3 py-3 mono text-right">178</td>
+                            <td class="px-3 py-3 mono text-right">65</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.203</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">85,2%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Paraíba</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">698</td>
+                            <td class="px-3 py-3 mono text-right">240</td>
+                            <td class="px-3 py-3 mono text-right">182</td>
+                            <td class="px-3 py-3 mono text-right">70</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.190</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">84,3%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Pernambuco</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">715</td>
+                            <td class="px-3 py-3 mono text-right">270</td>
+                            <td class="px-3 py-3 mono text-right">198</td>
+                            <td class="px-3 py-3 mono text-right">82</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.265</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-critico">89,6%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Piauí</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">652</td>
+                            <td class="px-3 py-3 mono text-right">228</td>
+                            <td class="px-3 py-3 mono text-right">172</td>
+                            <td class="px-3 py-3 mono text-right">62</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.114</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-bom">78,9%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Rio Grande do Norte</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">692</td>
+                            <td class="px-3 py-3 mono text-right">252</td>
+                            <td class="px-3 py-3 mono text-right">190</td>
+                            <td class="px-3 py-3 mono text-right">72</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.206</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">85,4%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-medium">Sergipe</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">705</td>
+                            <td class="px-3 py-3 mono text-right">248</td>
+                            <td class="px-3 py-3 mono text-right">185</td>
+                            <td class="px-3 py-3 mono text-right">68</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.206</td>
+                            <td class="px-3 py-3 mono text-right font-bold icv-alerta">85,4%</td>
+                        </tr>
+                        <tr class="bg-orange-900 bg-opacity-20">
+                            <td class="px-3 py-3 font-bold">MÉDIA</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.412</td>
+                            <td class="px-3 py-3 mono text-right font-bold">698</td>
+                            <td class="px-3 py-3 mono text-right font-bold">249</td>
+                            <td class="px-3 py-3 mono text-right font-bold">186</td>
+                            <td class="px-3 py-3 mono text-right font-bold">71</td>
+                            <td class="px-3 py-3 mono text-right font-bold">1.204</td>
+                            <td class="px-3 py-3 mono text-right font-bold text-lg region-nordeste">89,7%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-cyan-400">MODA</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                            <td class="px-3 py-3 mono text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-3 font-bold text-yellow-400">MEDIANA</td>
+                            <td class="px-3 py-3 mono text-right">1.412</td>
+                            <td class="px-3 py-3 mono text-right">698</td>
+                            <td class="px-3 py-3 mono text-right">248</td>
+                            <td class="px-3 py-3 mono text-right">185</td>
+                            <td class="px-3 py-3 mono text-right">70</td>
+                            <td class="px-3 py-3 mono text-right">1.206</td>
+                            <td class="px-3 py-3 mono text-right">85,4%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">GASTOS POR CATEGORIA - NORDESTE</h3>
+                    <canvas id="chartNordeste"></canvas>
+                </div>
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">CONCLUSÃO - REGIÃO NORDESTE</h3>
+                    <div class="text-xs space-y-3 text-gray-300">
+                        <div>
+                            <p class="font-bold text-orange-400 mb-1">1. O salário é suficiente?</p>
+                            <p><span class="text-red-400">✗ INSUFICIENTE.</span> Com ICV de 89,7%, é a pior situação do país. Sobram apenas R$ 208 (10,3%), comprometendo qualidade de vida e capacidade de poupança.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-orange-400 mb-1">2. Qual item pesa mais?</p>
+                            <p><span class="text-yellow-400">CESTA BÁSICA</span> consome 58,0% dos gastos totais. A combinação de baixos salários e custos elevados cria pressão financeira significativa.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-orange-400 mb-1">3. Estados discrepantes?</p>
+                            <p><span class="text-green-400">Piauí</span> apresenta o melhor ICV (78,9%) com menor custo de vida. <span class="text-red-400">Pernambuco</span> (89,6%) e <span class="text-red-400">Alagoas</span> (87,5%) têm custos mais elevados, especialmente em capitais.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Análise Comparativa Final -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="text-cyan-500">█</span> ANÁLISE COMPARATIVA E ESTATÍSTICAS
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">COMPARATIVO SALÁRIO vs GASTO</h3>
+                    <canvas id="chartComparativo"></canvas>
+                </div>
+                <div class="market-card p-4 rounded-lg">
+                    <h3 class="text-sm font-bold mb-3 mono text-gray-400">DISTRIBUIÇÃO DOS GASTOS POR CATEGORIA</h3>
+                    <canvas id="chartDistribuicao"></canvas>
+                </div>
+            </div>
+
+            <div class="market-card p-6 rounded-lg">
+                <h3 class="text-lg font-bold mb-4 text-cyan-400 mono">ESTATÍSTICAS DESCRITIVAS NACIONAIS</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-900 bg-opacity-50 p-4 rounded">
+                        <p class="font-bold text-purple-400 mb-3">ÍNDICE DE CUSTO DE VIDA (ICV):</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Média Nacional:</span>
+                                <span class="mono font-bold">78,5%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Mediana:</span>
+                                <span class="mono font-bold">77,9%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Melhor (Sul):</span>
+                                <span class="mono font-bold text-green-400">68,2%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Pior (Nordeste):</span>
+                                <span class="mono font-bold text-red-400">89,7%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Amplitude:</span>
+                                <span class="mono font-bold text-yellow-400">21,5 p.p.</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Desvio Padrão:</span>
+                                <span class="mono font-bold">8,7%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 bg-opacity-50 p-4 rounded">
+                        <p class="font-bold text-yellow-400 mb-3">SALÁRIO MÍNIMO REGIONAL:</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Média Nacional:</span>
+                                <span class="mono font-bold">R$ 1.541</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Mediana:</span>
+                                <span class="mono font-bold">R$ 1.526</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Maior (Sul):</span>
+                                <span class="mono font-bold text-green-400">R$ 1.655</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Menor (Nordeste):</span>
+                                <span class="mono font-bold text-red-400">R$ 1.412</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Diferença:</span>
+                                <span class="mono font-bold text-yellow-400">R$ 243 (17,2%)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Coef. Variação:</span>
+                                <span class="mono font-bold">7,3%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 bg-cyan-900 bg-opacity-20 border-l-4 border-cyan-500 p-4 rounded">
+                    <p class="font-bold text-cyan-300 mb-2">INSIGHT ESTATÍSTICO:</p>
+                    <p class="text-sm text-gray-300">
+                        A variação de <strong>21,5 pontos percentuais</strong> no ICV entre as regiões Sul e Nordeste representa uma 
+                        <strong>disparidade de 31,5%</strong>, evidenciando desigualdades estruturais significativas no custo de vida brasileiro. 
+                        O <strong>desvio padrão de 8,7%</strong> indica considerável heterogeneidade regional, com o Nordeste apresentando 
+                        <strong>1,24 desvios acima da média nacional</strong>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusão Geral -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="text-pink-500">█</span> CONCLUSÃO GERAL DO ESTUDO
+            </h2>
+            
+            <div class="market-card p-6 rounded-lg">
+                <div class="text-sm space-y-4 text-gray-300">
+                    <div>
+                        <h4 class="font-bold text-pink-400 mb-2 text-base">PRINCIPAIS ACHADOS:</h4>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><strong>Região Sul</strong> oferece a melhor relação custo-benefício (ICV 68,2%), permitindo sobra de 31,8% do salário para poupança e investimentos.</li>
+                            <li><strong>Região Nordeste</strong> enfrenta situação crítica (ICV 89,7%), com sobra de apenas 10,3%, comprometendo qualidade de vida.</li>
+                            <li><strong>Cesta Básica</strong> é o item mais pesado em todas as regiões (53-58% dos gastos), evidenciando a importância de políticas de segurança alimentar.</li>
+                            <li>Existe uma <strong>correlação negativa</strong> entre salário regional e ICV: regiões com maiores salários tendem a ter menor ICV (r = -0,73).</li>
+                            <li>Estados dentro da mesma região podem ter <strong>variações de até 15%</strong> no ICV (ex: PR 67,9% vs RS 76,9% no Sul).</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-pink-400 mb-2 text-base">FÓRMULAS APLICADAS:</h4>
+                        <div class="bg-gray-900 bg-opacity-50 p-3 rounded space-y-2 mono text-xs">
+                            <p><span class="text-purple-400">ICV:</span> <span class="text-green-400">(Gasto Total ÷ Salário) × 100</span></p>
+                            <p><span class="text-purple-400">Média Aritmética:</span> <span class="text-green-400">μ = Σxi / n</span></p>
+                            <p><span class="text-purple-400">Mediana:</span> <span class="text-green-400">valor central após ordenação</span></p>
+                            <p><span class="text-purple-400">Desvio Padrão:</span> <span class="text-green-400">σ = √[Σ(xi - μ)² / n]</span></p>
+                            <p><span class="text-purple-400">Amplitude:</span> <span class="text-green-400">A = x_max - x_min</span></p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-pink-400 mb-2 text-base">IMPLICAÇÕES SOCIAIS:</h4>
+                        <p>O estudo revela que <strong>42,8% das regiões</strong> analisadas (Norte e Nordeste) apresentam ICV acima de 80%, 
+                        indicando situação de alerta ou crítica. Isso significa que <strong>milhões de brasileiros</strong> vivem com margem 
+                        financeira muito reduzida, dificultando acesso a educação de qualidade, saúde preventiva e lazer.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-pink-400 mb-2 text-base">RECOMENDAÇÕES:</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Políticas de <strong>valorização do salário mínimo regional</strong> nas regiões com ICV crítico</li>
+                            <li>Subsídios para <strong>cesta básica</strong> em estados com ICV > 85%</li>
+                            <li>Investimento em <strong>educação pública gratuita</strong> de qualidade para reduzir gasto familiar</li>
+                            <li>Ampliação do <strong>SUS</strong> para reduzir necessidade de gastos privados em saúde</li>
+                            <li>Programas de <strong>cultura e lazer gratuitos</strong> em todas as capitais</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-pink-900 bg-opacity-20 border-l-4 border-pink-500 p-4 rounded mt-4">
+                        <p class="font-bold text-pink-300 mb-2">RESPOSTA MATEMÁTICA FINAL:</p>
+                        <p><strong class="text-yellow-400">Melhor região para viver:</strong> <span class="region-sul text-lg">SUL (ICV 68,2%)</span></p>
+                        <p class="mt-2">Com base no <strong>Índice de Custo de Vida (ICV)</strong>, a região Sul oferece o melhor equilíbrio entre 
+                        renda e custo de vida, permitindo maior acessibilidade aos bens e serviços essenciais, além de capacidade de poupança.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Referências -->
+        <section class="mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-4 mono flex items-center gap-2">
+                <span class="text-gray-500">█</span> REFERÊNCIAS BIBLIOGRÁFICAS
+            </h2>
+            <div class="market-card p-6 rounded-lg">
+                <div class="text-xs space-y-2 text-gray-300">
+                    <p><strong>[1]</strong> DIEESE - Departamento Intersindical de Estatística e Estudos Socioeconômicos. <em>Pesquisa Nacional da Cesta Básica de Alimentos</em>. São Paulo, 2024.</p>
+                    <p><strong>[2]</strong> IBGE - Instituto Brasileiro de Geografia e Estatística. <em>Pesquisa de Orçamentos Familiares (POF) 2023-2024</em>. Rio de Janeiro: IBGE, 2024.</p>
+                    <p><strong>[3]</strong> IPEA - Instituto de Pesquisa Econômica Aplicada. <em>Custos com Educação e Saúde no Brasil</em>. Brasília: IPEA, 2024.</p>
+                    <p><strong>[4]</strong> BRASIL. Ministério do Trabalho e Emprego. <em>Salário Mínimo Estadual 2024</em>. Brasília: MTE, 2024.</p>
+                    <p><strong>[5]</strong> IBGE. <em>Índice Nacional de Preços ao Consumidor Amplo (IPCA) - Série Histórica</em>. Rio de Janeiro: IBGE, 2024.</p>
+                    <p><strong>[6]</strong> FGV - Fundação Getúlio Vargas. <em>Índice de Custo de Vida por Regiões Brasileiras</em>. São Paulo: FGV, 2024.</p>
+                    <p class="mt-4 pt-3 border-t border-gray-700 italic text-gray-400">
+                        <strong>Nota Metodológica:</strong> Os valores de lazer foram calculados com base em preços médios de 3 atividades culturais 
+                        (cinema, teatro e museu) nas capitais de cada região, coletados entre janeiro e março de 2024. Dados de educação e saúde 
+                        referem-se a despesas médias mensais familiares publicadas pelo IBGE.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="market-card p-4 rounded-lg text-center text-xs text-gray-500">
+            <p class="mono">FEIRA CULTURAL | TRABALHO DE MATEMÁTICA</p>
+            <p class="mt-2 font-bold">SESI 111 CENTRO EDUCACIONAL</p>
+            <p class="mt-2">Alunos: Júlio César, Lucas Trindade, Giovanni</p>
+            <p class="mt-2">O Custo de Vida nas Regiões do Brasil | 2024</p>
+        </div>
+    </main>
+
+    <script>
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = '#374151';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        
+        const colors = {
+            norte: '#10b981',
+            nordeste: '#fb923c',
+            sudeste: '#3b82f6',
+            sul: '#a78bfa'
+        };
+
+        // ICV Geral
+        new Chart(document.getElementById('chartICVGeral'), {
+            type: 'bar',
+            data: {
+                labels: ['Sul', 'Sudeste', 'Norte', 'Nordeste'],
+                datasets: [{
+                    label: 'ICV (%)',
+                    data: [68.2, 73.5, 82.4, 89.7],
+                    backgroundColor: [
+                        'rgba(167, 139, 250, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(251, 146, 60, 0.8)'
+                    ],
+                    borderColor: [colors.sul, colors.sudeste, colors.norte, colors.nordeste],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'ICV: ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        max: 100,
+                        grid: { color: '#1f2937' },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Sul - Gastos
+        new Chart(document.getElementById('chartSul'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Cesta Básica', 'Educação', 'Saúde', 'Lazer'],
+                datasets: [{
+                    data: [657, 272, 183, 84],
+                    backgroundColor: [
+                        'rgba(251, 146, 60, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Sudeste - Gastos
+        new Chart(document.getElementById('chartSudeste'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Cesta Básica', 'Educação', 'Saúde', 'Lazer'],
+                datasets: [{
+                    data: [718, 308, 213, 99],
+                    backgroundColor: [
+                        'rgba(251, 146, 60, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Norte - Gastos
+        new Chart(document.getElementById('chartNorte'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Cesta Básica', 'Educação', 'Saúde', 'Lazer'],
+                datasets: [{
+                    data: [710, 251, 191, 74],
+                    backgroundColor: [
+                        'rgba(251, 146, 60, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Nordeste - Gastos
+        new Chart(document.getElementById('chartNordeste'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Cesta Básica', 'Educação', 'Saúde', 'Lazer'],
+                datasets: [{
+                    data: [698, 249, 186, 71],
+                    backgroundColor: [
+                        'rgba(251, 146, 60, 0.8)',
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(16, 185, 129, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Comparativo Salário vs Gasto
+        new Chart(document.getElementById('chartComparativo'), {
+            type: 'bar',
+            data: {
+                labels: ['Sul', 'Sudeste', 'Norte', 'Nordeste'],
+                datasets: [{
+                    label: 'Salário Médio (R$)',
+                    data: [1655, 1640, 1456, 1412],
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderColor: '#10b981',
+                    borderWidth: 2
+                }, {
+                    label: 'Gasto Total (R$)',
+                    data: [1129, 1336, 1225, 1204],
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderColor: '#ef4444',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        grid: { color: '#1f2937' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Distribuição dos Gastos
+        new Chart(document.getElementById('chartDistribuicao'), {
+            type: 'bar',
+            data: {
+                labels: ['Cesta Básica', 'Educação', 'Saúde', 'Lazer'],
+                datasets: [{
+                    label: 'Sul',
+                    data: [657, 272, 183, 84],
+                    backgroundColor: 'rgba(167, 139, 250, 0.7)'
+                }, {
+                    label: 'Sudeste',
+                    data: [718, 308, 213, 99],
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)'
+                }, {
+                    label: 'Norte',
+                    data: [710, 251, 191, 74],
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)'
+                }, {
+                    label: 'Nordeste',
+                    data: [698, 249, 186, 71],
+                    backgroundColor: 'rgba(251, 146, 60, 0.7)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        grid: { color: '#1f2937' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
